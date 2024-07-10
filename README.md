@@ -31,7 +31,13 @@ Se exponen los siguientes Endpoints :
 * DELETE **http://localhost:5000/saludos/id**: Elimina el saludo almacenado en base de datos que corresponda con el id enviado, si no existe el registro, regresa un 404.
 
 
-** El autributo "lenguage" es un atributo opcional
+
+** Notas: 
+1. El autributo "language" es un atributo opcional.
+2. Se ha hecho uso de Flask-SQLAlchemy requerida en el documento de definición de la prueba y todas las librerias necesarias para desarrollar una api en Flask.
+3. Se ha hecho uso de SQLite en lugar de PostgreSQL o MySQL debido a que solo se ha implementado un único modelo bajo el cual se hacen todas las operaciones, sin embargo utilizar alguno de los gestores mencionados anteriormente no representaría mayor dificultad mas que agregar un paso adicional en el docker-compose.
+4. Para correr el proyecto es necesario tener instalado Docker.
+
 
 ## Corriendo la app
 

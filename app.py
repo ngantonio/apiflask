@@ -13,34 +13,11 @@ with app.app_context():
   db = SQLAlchemy(app)
   ma = Marshmallow(app)
 
-
-  ########################## START MODELS AND SCHEMA ####################
-
-  class Greeting(db.Model):
-    
-    id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(50))
-    language = db.Column(db.String(20),  nullable=True)
-    
-    def __init__(self, msg, lang):
-      self.message = msg
-      self.language = lang
-      
-  db.create_all()
-
-
-  class GreetingSchema(ma.Schema):
-    class Meta:
-      fields = ('id', 'message', 'language')
-
-  greeting_schema = GreetingSchema()
-  greetings_schema = GreetingSchema(many=True)
-  
-  ########################## END MODELS AND SCHEMA ####################
-
+  # import model and schemas
+  from models import Greeting, greeting_schema, greetings_schema
 
   ########################### START  ROUTES ###########################
-
+  
   # Create greeting
   @app.route('/saludos', methods=['POST'])
   def createGreeting():

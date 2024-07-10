@@ -13,7 +13,9 @@ with app.app_context():
   db = SQLAlchemy(app)
   ma = Marshmallow(app)
 
-  # MODELS AND SCHEMA
+
+  ########################## START MODELS AND SCHEMA ####################
+
   class Greeting(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
@@ -33,10 +35,13 @@ with app.app_context():
 
   greeting_schema = GreetingSchema()
   greetings_schema = GreetingSchema(many=True)
+  
+  ########################## END MODELS AND SCHEMA ####################
 
 
-  # ROUTES
+  ########################### START  ROUTES ###########################
 
+  # Create greeting
   @app.route('/saludos', methods=['POST'])
   def createGreeting():
     message = request.json['message']
@@ -46,17 +51,18 @@ with app.app_context():
       new_greeting = Greeting(message,lang)
       db.session.add(new_greeting)
       db.session.commit()
-      
       return greeting_schema.jsonify(new_greeting)
-    
     return jsonify({"message": "El mensaje es requerido para almacenar el saludo"}),404
     
+    
+  # Get greetings
   @app.route('/saludos', methods=['GET'])
   def getGreetings():
     all_greetings = Greeting.query.all()
     return jsonify(greetings_schema.dump(all_greetings))
   
 
+  # Get greeting by id
   @app.route('/saludos/<id>', methods=['GET'])
   def getGreeting(id):
     greeting = Greeting.query.get(id)
@@ -66,7 +72,7 @@ with app.app_context():
     return jsonify({"message": "El saludo requerido no existe"}),404
   
   
-  
+  # Update greeting
   @app.route('/saludos/<id>', methods=['PUT'])
   def updateGreeting(id):
     
@@ -79,17 +85,15 @@ with app.app_context():
       if updatedMsg and updatedMsg != "":   
         greeting.message = updatedMsg
         greeting.language = updatedLang
-        
         db.session.commit()
     
         return greeting_schema.jsonify(greeting)
       
       return jsonify({"message": "El mensaje es requerido para almacenar el saludo"}),404
-      
     return jsonify({"message": "El saludo requerido no existe"}),404
   
 
-  
+  # Delete greeting
   @app.route('/saludos/<id>', methods=['DELETE'])
   def deleteGreeting(id):
     
@@ -99,7 +103,7 @@ with app.app_context():
       db.session.delete(greeting)
       db.session.commit()
       return greeting_schema.jsonify(greeting)
-    
     return jsonify({"message": "El saludo requerido no existe"}),404
     
 
+ ########################### END ROUTES ################################

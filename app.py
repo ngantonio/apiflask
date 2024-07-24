@@ -63,10 +63,15 @@ with app.app_context():
     greeting = Greeting.query.get(id)
     
     if greeting:
-      updatedMsg = request.json['message']
-      updatedLang = request.json['language']
-    
-      if updatedMsg and updatedMsg != "":   
+      data = json.loads(request.data)
+
+      if 'language' in data:
+        updatedLang = data['language']
+      else:
+        updatedLang = ""
+      
+      if 'message' in data and data['message'] != "":
+        updatedMsg = data['message']  
         greeting.message = updatedMsg
         greeting.language = updatedLang
         db.session.commit()

@@ -3,5 +3,23 @@ version: '3'
 services:
   api:
     build: .
+    container_name: flask_api
     ports:
       - "5000:5000"
+    environment:
+      - DB_URL=postgresql://postgres:postgres@api_db:5432/postgres
+    depends_on:
+      - api_db
+  api_db:
+    container_name: api_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}

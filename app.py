@@ -1,12 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from os import environ
+import json
 
 app = Flask(__name__)
 
 with app.app_context(): 
   
-  app.config['SQLALCHEMY_DATABASE_URI'] =  'sqlite:///greetings.db'
+  app.config['SQLALCHEMY_DATABASE_URI'] =  environ.get("DB_URL")
   app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -21,10 +23,15 @@ with app.app_context():
   # Create greeting
   @app.route('/saludos', methods=['POST'])
   def createGreeting():
-    message = request.json['message']
-    lang = request.json['language']
+    data = json.loads(request.data)
+   
+    if 'language' in data:
+      lang = data['language']
+    else:
+      lang = ""
     
-    if message and message != "":
+    if 'message' in data and data['message'] != "":
+      message = data['message']
       new_greeting = Greeting(message,lang)
       db.session.add(new_greeting)
       db.session.commit()
